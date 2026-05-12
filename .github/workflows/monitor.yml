@@ -1,0 +1,33 @@
+name名称名称: 观势浮生动态监控
+
+on:启用启用:
+  schedule:计划:计划:
+    - cron: '*/1 * * * *'
+  workflow_dispatch:工作流触发:
+
+jobs:作业:
+  check:检查:
+    runs-on: ubuntu-latest运行于: ubuntu-latest
+    steps:步骤:步骤:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:与:与:
+          python-version: '3.11'Python版本: '3.11'
+
+      - name: 检查新动态      - 名称: 检查新动态
+        env:环境:
+          BILI_UID: ${{ vars.BILI_UID }}
+          BILI_SESSDATA: ${{ secrets.BILI_SESSDATA }}
+          BILI_JCT: ${{ secrets.BILI_JCT }}
+          BILI_DEDE_USERID: ${{ secrets.BILI_DEDE_USERID }}
+          DINGTALK_TOKEN: ${{ secrets.DINGTALK_TOKEN }}
+          DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
+        run: python monitor.py运行: python monitor.py运行: python monitor.py运行: python monitor.py运行: python monitor.py运行: python monitor.py运行: python monitor.py运行: python monitor.py
+
+      - name名称名称: 提交状态更新
+        run: |运行: |运行: |运行: |运行: |运行: |运行: |运行: |运行: |运行: |运行: |运行: |运行: |运行: |运行: |运行: |
+          git config user.name "bili-monitor"
+          git config user.email "bili-monitor@github.com"
+          git add state.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "chore: update state"
+          git pushgit 推送
